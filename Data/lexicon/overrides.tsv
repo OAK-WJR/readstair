@@ -1,0 +1,407 @@
+# form<TAB>action<TAB>reason. Reviewed lemma decisions that tools/make-lexicon.py applies after every rule; action: keep (the form is its own lemma) or fold:<lemma> (the form reads as that lemma). Rule: the lemma is the headword a reader sees, translates and saves after tapping the word in a book, so a form is kept when learner's dictionaries give it its own entry (noun, adjective, adverb, preposition or interjection) and that entry is its usual reading (meeting, interested, according, thanks); when the readings are about even, it is kept only if its own headword still fits the other reading while the base word would be taken for another word (meaning, not mean; stuck, not stick). Verb forms, regular plurals and comparatives stay folded (walked, walking, mice, better, lighter, left, lost). A plural follows a kept singular (meetings); it keeps its own headword when its usual meaning is one the singular lacks (glasses, goods, manners) or when the noun is plural-only (scissors, jeans). The generator itself keeps the -ings plural of a folded -ing form (sayings is a noun, never say). Folded here: regular plurals the rules cannot reach, because WordNet lists the plural as a noun of its own (viewers, followers), writes the singular only capitalized (americans, sundays) or lacks the word (smartphones, selfies). fold:<lemma> also corrects a wrong target (lives is mostly the plural of life). Evidence: a teacher's judgement of ordinary reading, checked against part-of-speech counts in UD English-EWT where it has enough (so far all three splits, which is why the lemma evaluation set is also scored without the forms decided here; later reviews use dev and test only); an unclear case keeps the automatic decision. Reviewed: the 400 most frequent flagged folds; among the 30,000 most frequent forms, the classes above; folds into a lemma at least 30 times rarer than the form (outgoing is not outgo).
+abode	keep	noun: a home; the past of abide is archaic
+according	keep	preposition (according to); not accord
+accounting	keep	noun: keeping financial records
+accustomed	keep	adjective (accustomed to); the verb is rare
+acquainted	keep	adjective (acquainted with); the verb is rare
+acres	fold:acre	plural of acre
+adjoining	keep	adjective: next to and joined to; the verb adjoin is rarely used
+admins	fold:admin	plural of admin
+advanced	keep	adjective: modern, high level (an advanced course)
+africans	fold:african	plural of african
+aged	keep	adjective: of the age of (aged 30), old
+aggrieved	keep	adjective of feeling: unfairly treated; the verb aggrieve is rarely used
+agitated	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+airbags	fold:airbag	plural of airbag
+airstrikes	fold:airstrike	plural of airstrike
+alarmed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+alarming	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+alas	keep	an interjection; the noun rule would read it as the plural of ala (a wing)
+amazed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+amazing	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+americans	fold:american	plural of american
+amused	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+amusing	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+annoyed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+antics	keep	noun: silly behaviour
+appalled	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+arabs	fold:arab	plural of arab
+armed	keep	adjective: carrying weapons; arm is a body part
+armenians	fold:armenian	plural of armenian
+armored	keep	adjective made from a noun (having a talent, a flaw); no verb form
+armoured	fold:armored	British spelling of armored
+asians	fold:asian	plural of asian
+assorted	keep	adjective: of various kinds; the verb assort is rarely used
+astonished	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+astonishing	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+australians	fold:australian	plural of australian
+austrians	fold:austrian	plural of austrian
+baffled	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+baffling	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+banking	keep	noun: the business of banks
+baptists	fold:baptist	plural of baptist
+basics	keep	noun: the simplest facts; basic is an adjective
+bearded	keep	adjective made from a noun (having a talent, a flaw); no verb form
+bewildered	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+biased	keep	adjective made from a noun (having a talent, a flaw); no verb form
+bikers	fold:biker	plural of biker
+bitcoins	fold:bitcoin	plural of bitcoin
+blues	keep	noun: a music style, sadness
+bolsheviks	fold:bolshevik	plural of bolshevik
+bored	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+born	keep	adjective (be born); bear alone reads as the animal
+bowling	keep	noun: a game; bowl alone reads as a dish
+boxing	keep	noun: a sport; box alone reads as a container
+brazilians	fold:brazilian	plural of brazilian
+breakers	fold:breaker	plural of breaker
+broken	keep	adjective: damaged; break alone reads as the noun (a pause)
+buddhists	fold:buddhist	plural of buddhist
+bulgarians	fold:bulgarian	plural of bulgarian
+bullying	keep	noun: hurting weaker people; bully alone reads as a person
+buns	fold:bun	plural of bun
+californians	fold:californian	plural of californian
+camping	keep	noun (go camping)
+canadians	fold:canadian	plural of canadian
+carbs	fold:carb	plural of carb
+carers	fold:carer	plural of carer
+catering	keep	noun: providing food
+catholics	fold:catholic	plural of catholic
+celebs	fold:celeb	plural of celeb
+challenging	keep	adjective: difficult in a good way
+charming	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+cheerleading	keep	noun: the activity of cheerleaders; the verb cheerlead is rarely used
+christians	fold:christian	plural of christian
+civilised	fold:civilized	British spelling of civilized
+civilized	keep	adjective: polite, advanced (a civilized society)
+clad	keep	adjective: dressed, covered (clad in black); the verb clothe is rarely used
+cladding	keep	noun: a covering on the outside of a building; clad means dressed
+commenters	fold:commenter	plural of commenter
+compelling	keep	adjective: convincing, gripping
+complicated	keep	adjective: difficult to understand
+concerned	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+concerning	keep	preposition: about
+conditioning	keep	noun (air conditioning)
+conflicting	keep	adjective: disagreeing (conflicting reports)
+confused	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+confusing	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+congested	keep	adjective: crowded, blocked; the verb congest is rarely used
+convoluted	keep	adjective: very complicated; the verb convolute is rarely used
+cooking	keep	noun: preparing food (her cooking); cook alone reads as a person
+cooler	fold:cool	comparative of cool (cooler weather); a cooler (a box) is rarer
+corrections	fold:correction	plural of correction
+corresponding	keep	adjective: matching, related
+counseling	keep	noun: professional advice
+counselling	fold:counseling	British spelling of counseling
+coworkers	fold:coworker	plural of coworker
+crooked	keep	adjective made from a noun (having a talent, a flaw); no verb form
+crowded	keep	adjective: full of people; crowd is a noun first
+cubans	fold:cuban	plural of cuban
+cycling	keep	noun: riding a bicycle
+danes	fold:dane	plural of dane
+dating	keep	noun: going out with someone (online dating); date alone reads as a day
+deceased	keep	adjective, noun: dead; the verb is archaic
+dedicated	keep	adjective: devoted, for one purpose
+deeds	fold:deed	plural of deed
+delighted	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+depraved	keep	adjective: morally bad; the verb deprave is rarely used
+depressed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+depressing	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+deranged	keep	adjective: mad; the verb derange is rarely used
+descendants	fold:descendant	plural of descendant
+deserted	keep	adjective: empty of people; desert is a noun first
+destined	keep	adjective (destined to); the verb is rare
+detailed	keep	adjective: full of details
+determined	keep	adjective: firmly decided (determined to win)
+devastated	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+devastating	keep	adjective: very damaging or shocking
+devoted	keep	adjective: loving and loyal (devoted to her)
+dignified	keep	adjective: calm and serious, deserving respect; dignify means make something seem worthy
+disabled	keep	adjective, noun (disabled people)
+disappointed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+disappointing	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+disgusted	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+disgusting	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+disorganized	keep	adjective: badly organized; the verb disorganize is rarely used
+distinguished	keep	adjective: respected, eminent
+disturbed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+disturbing	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+doomed	keep	adjective: certain to fail or die
+drawers	fold:drawer	plural of drawer
+dressed	keep	adjective: wearing clothes (dressed in black); dress is a noun first
+drunk	keep	adjective: affected by alcohol (he was drunk)
+dui	keep	noun: drunk driving (an abbreviation), not duo
+dumplings	fold:dumpling	plural of dumpling
+ebooks	fold:ebook	plural of ebook
+economics	keep	noun: the science of the economy; economic is an adjective
+egyptians	fold:egyptian	plural of egyptian
+elated	keep	adjective of feeling: very happy; the verb elate is rarely used
+electronics	keep	noun: devices, a field of study
+embarrassed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+embarrassing	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+emojis	fold:emoji	plural of emoji
+endangered	keep	adjective (endangered species)
+essentials	keep	noun: necessary things
+europeans	fold:european	plural of european
+evangelicals	fold:evangelical	plural of evangelical
+excited	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+exciting	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+execs	fold:exec	plural of exec
+exhausted	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+exhausting	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+existing	keep	adjective: present now (existing rules)
+farming	keep	noun: agriculture
+fascinated	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+fascinating	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+filipinos	fold:filipino	plural of filipino
+fishing	keep	noun: catching fish (go fishing)
+flawed	keep	adjective made from a noun (having a talent, a flaw); no verb form
+follies	fold:folly	plural of folly
+followers	fold:follower	plural of follower
+formalities	fold:formality	plural of formality
+founding	keep	adjective, noun (founding members); found reads as find
+freezing	keep	adjective: very cold (it is freezing)
+fridays	fold:friday	plural of friday
+frightened	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+frightening	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+frozen	keep	adjective: turned to ice, very cold
+frustrated	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+frustrating	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+fucking	keep	intensifier (adjective, adverb); the usual reading
+fundamentals	keep	noun: basic principles
+funding	keep	noun: money given for a purpose
+gamer	keep	noun: a player of games, not a comparative
+gamers	fold:gamer	plural of gamer
+gaming	keep	noun: playing video games or gambling
+gardening	keep	noun: growing plants
+germans	fold:german	plural of german
+gifted	keep	adjective made from a noun (having a talent, a flaw); no verb form
+glasses	keep	noun: spectacles; glass alone reads as the material
+goggles	keep	plural-only noun
+goods	keep	noun: things for sale; good alone reads as the adjective
+goosebumps	keep	plural-only noun
+greeks	fold:greek	plural of greek
+hashtags	fold:hashtag	plural of hashtag
+headphones	keep	plural-only noun
+hidden	keep	adjective: not easy to see or find
+hiking	keep	noun (go hiking)
+hindus	fold:hindu	plural of hindu
+hippies	fold:hippie	plural of hippie
+hipsters	fold:hipster	plural of hipster
+hispanics	fold:hispanic	plural of hispanic
+hooded	keep	adjective made from a noun (having a talent, a flaw); no verb form
+hoodies	fold:hoodie	plural of hoodie
+horned	keep	adjective made from a noun (having a talent, a flaw); no verb form
+horrifying	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+housing	keep	noun: homes (affordable housing)
+humiliated	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+humiliating	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+hungarians	fold:hungarian	plural of hungarian
+impressed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+inclined	keep	adjective (inclined to agree)
+including	keep	preposition (including tax)
+indians	fold:indian	plural of indian
+infatuated	keep	adjective of feeling; the verb infatuate is rarely used
+influencers	fold:influencer	plural of influencer
+infuriated	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+infuriating	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+inspired	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+inspiring	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+interested	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+interesting	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+intimidated	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+intimidating	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+intrigued	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+intriguing	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+involved	keep	adjective: taking part, complicated
+iranians	fold:iranian	plural of iranian
+iraqis	fold:iraqi	plural of iraqi
+irritated	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+irritating	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+islamists	fold:islamist	plural of islamist
+isolated	keep	adjective: far from others, single (an isolated case)
+israelis	fold:israeli	plural of israeli
+italians	fold:italian	plural of italian
+jeans	keep	plural-only noun
+jesuits	fold:jesuit	plural of jesuit
+jihadists	fold:jihadist	plural of jihadist
+keywords	fold:keyword	plural of keyword
+koreans	fold:korean	plural of korean
+later	keep	adverb: afterwards (two years later); not late
+latest	keep	adjective: most recent; not late
+latinos	fold:latino	plural of latino
+leggings	keep	plural-only noun
+lighter	fold:light	comparative of light (lighter colours); a lighter (for cigarettes) is rarer
+lighting	keep	noun: the lights in a place (stage lighting)
+limited	keep	adjective: restricted in amount (limited time)
+lives	fold:life	mostly the plural of life, not the verb live
+loving	keep	adjective: showing love
+lower	keep	verb (lower your voice) and adjective; lowered and lowering follow it
+lyrics	keep	noun: the words of a song
+manners	keep	noun: polite behaviour; manner is a way
+marketing	keep	noun: selling and promotion; market alone reads as a place
+marxists	fold:marxist	plural of marxist
+meaning	keep	noun: what something means; mean alone reads as unkind or average
+media	keep	noun: newspapers, TV, the internet
+meeting	keep	noun: an event (a board meeting)
+metrics	fold:metric	plural of metric
+mexicans	fold:mexican	plural of mexican
+midfielders	fold:midfielder	plural of midfielder
+millennials	fold:millennial	plural of millennial
+mining	keep	noun: digging for minerals; mine alone reads as the pronoun
+misguided	keep	adjective: based on bad judgement; the verb misguide is rarely used
+misleading	keep	adjective: giving a wrong idea
+missing	keep	adjective: lost, absent (a missing child)
+mistaken	keep	adjective: wrong (if I am not mistaken)
+mondays	fold:monday	plural of monday
+mormons	fold:mormon	plural of mormon
+muslims	fold:muslim	plural of muslim
+neighboring	keep	adjective: next to (neighboring countries)
+neighbouring	fold:neighboring	British spelling of neighboring
+nigerians	fold:nigerian	plural of nigerian
+nursing	keep	noun: caring for the sick; nurse alone reads as a person
+obsessed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+opioids	fold:opioid	plural of opioid
+organs	fold:organ	plural of organ
+outgoing	keep	adjective: friendly, leaving (the outgoing president); outgo means surpass
+overbearing	keep	adjective: too controlling; the verb overbear is rarely used
+overcrowded	keep	adjective: too full of people; the verb overcrowd is rarely used
+overpriced	keep	adjective: too expensive; the verb overprice is rarely used
+overrated	keep	adjective: rated too highly; the verb overrate is rarely used
+overwhelmed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+overwhelming	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+packaging	keep	noun: materials that wrap goods
+pajamas	keep	plural-only noun
+pakistanis	fold:pakistani	plural of pakistani
+palestinians	fold:palestinian	plural of palestinian
+parking	keep	noun: leaving a car; park alone reads as a garden
+payouts	fold:payout	plural of payout
+peanuts	fold:peanut	plural of peanut
+perplexed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+persians	fold:persian	plural of persian
+pleased	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+plugins	fold:plugin	plural of plugin
+poisoning	keep	noun: an illness (food poisoning); poison alone reads as the substance
+preceding	keep	adjective: coming before
+premeditated	keep	adjective: planned in advance; the verb premeditate is rarely used
+premises	keep	noun: a building and its land
+primates	fold:primate	plural of primate
+privileged	keep	adjective made from a noun (having a talent, a flaw); no verb form
+programming	keep	noun: writing programs, broadcast schedules
+promos	fold:promo	plural of promo
+protestants	fold:protestant	plural of protestant
+protracted	keep	adjective: lasting longer than usual; the verb protract is rarely used
+proverbs	fold:proverb	plural of proverb
+punks	fold:punk	plural of punk
+puzzled	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+puzzling	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+pyjamas	fold:pajamas	British spelling of pajamas
+qualified	keep	adjective: having the right training
+realtors	fold:realtor	plural of realtor
+reasoning	keep	noun: a way of thinking
+recording	keep	noun: sound or pictures recorded (a recording)
+refreshed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+refreshing	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+regarding	keep	preposition: about
+related	keep	adjective: connected (related issues)
+relaxed	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+relaxing	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+relieved	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+remixes	fold:remix	plural of remix
+rewarding	keep	adjective: satisfying (a rewarding job)
+rockers	fold:rocker	plural of rocker
+romanians	fold:romanian	plural of romanian
+russians	fold:russian	plural of russian
+satisfied	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+satisfying	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+saturdays	fold:saturday	plural of saturday
+saudis	fold:saudi	plural of saudi
+saxons	fold:saxon	plural of saxon
+scared	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+schooling	keep	noun: education
+scissors	keep	plural-only noun
+screenshots	fold:screenshot	plural of screenshot
+seated	keep	adjective: sitting (remained seated)
+secluded	keep	adjective: quiet and private; the verb seclude is rarely used
+selfies	fold:selfie	plural of selfie
+serbs	fold:serb	plural of serb
+shenanigans	keep	plural-only noun
+shipping	keep	noun: sending goods; ship alone reads as a boat
+shocked	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+shocking	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+shopping	keep	noun: buying things (go shopping); shop alone reads as a store
+shorts	keep	plural-only noun: short trousers
+sikhs	fold:sikh	plural of sikh
+situated	keep	adjective: placed (situated on a hill)
+skating	keep	noun (go skating)
+skiing	keep	noun (go skiing)
+skilled	keep	adjective made from a noun (having a talent, a flaw); no verb form
+slew	keep	noun (a slew of); the past of slay is rare
+smartphones	fold:smartphone	plural of smartphone
+smitten	keep	adjective: in love (smitten with her); smite is archaic
+sophisticated	keep	adjective: refined, advanced; the verb is rare
+spaniards	fold:spaniard	plural of spaniard
+spartans	fold:spartan	plural of spartan
+specifics	keep	noun: details; specific is an adjective
+spelling	keep	noun: writing words with letters; spell alone reads as magic
+spirited	keep	adjective made from a noun (having a talent, a flaw); no verb form
+sporting	keep	adjective: of sport (sporting events)
+startled	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+startling	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+stranded	keep	adjective: left with no way to leave; strand alone reads as a thread
+striped	keep	adjective made from a noun (having a talent, a flaw); no verb form
+stuck	keep	adjective: unable to move (stuck in traffic); stick alone reads as the noun
+stunned	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+stunning	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+sundays	fold:sunday	plural of sunday
+supposed	keep	adjective (be supposed to): expected; not suppose (think)
+surfing	keep	noun (go surfing)
+surprised	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+surprising	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+swollen	keep	adjective: bigger than usual (a swollen ankle)
+synths	fold:synth	plural of synth
+syrians	fold:syrian	plural of syrian
+talented	keep	adjective made from a noun (having a talent, a flaw); no verb form
+tempted	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+tempting	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+terrifying	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+texans	fold:texan	plural of texan
+thanks	keep	interjection, noun (thanks!); the usual reading
+thrilled	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+thrilling	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+thursdays	fold:thursday	plural of thursday
+timbre	keep	the quality of a sound; timber is wood
+timing	keep	noun: choosing the moment
+tired	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+tiring	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+tons	fold:ton	plural of ton
+tories	fold:tory	plural of tory
+trading	keep	noun: buying and selling
+transactions	fold:transaction	plural of transaction
+troubled	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+troubling	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+trousers	keep	plural-only noun
+tuesdays	fold:tuesday	plural of tuesday
+turks	fold:turk	plural of turk
+ukrainians	fold:ukrainian	plural of ukrainian
+underlying	keep	adjective: basic, hidden (the underlying cause)
+underrated	keep	adjective: better than people think; the verb underrate is rarely used
+understanding	keep	noun, adjective: knowledge, agreement, sympathetic
+uniformed	keep	adjective made from a noun (having a talent, a flaw); no verb form
+united	keep	adjective (a united front); in names it is United
+unmanned	keep	adjective: with no crew (an unmanned drone); unman means make afraid
+upsetting	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+usernames	fold:username	plural of username
+valuables	keep	noun: valuable possessions
+vapors	fold:vapor	plural of vapor
+vibes	fold:vibe	plural of vibe
+viewers	fold:viewer	plural of viewer
+watts	fold:watt	plural of watt
+wednesdays	fold:wednesday	plural of wednesday
+whopping	keep	adjective: very large (a whopping 50%); whop means hit
+winged	keep	adjective made from a noun (having a talent, a flaw); no verb form
+wooded	keep	adjective made from a noun (having a talent, a flaw); no verb form
+worried	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+worrying	keep	adjective of feeling (taught with its -ed/-ing pair); the usual reading
+wrought	keep	adjective (wrought iron)
+youtubers	fold:youtuber	plural of youtuber
+zionists	fold:zionist	plural of zionist

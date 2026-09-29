@@ -1,0 +1,70 @@
+# ── macOS / editors ──
+.DS_Store
+.AppleDouble
+.LSOverride
+.vscode/
+.idea/
+buildServer.json
+
+# ── Xcode ──
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+xcuserdatad/
+*.xcscmblueprint
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM
+*.dSYM.zip
+*.xcresult
+Config/Local.xcconfig
+
+# ── Swift Package Manager ──
+.build/
+.swiftpm/
+Packages/*/.build/
+
+# ── Python (tools/) ──
+__pycache__/
+
+# ── Secrets and credentials (never commit) ──
+*.pem
+*.p12
+*.p8
+*.key
+*.cer
+*.mobileprovision
+.env
+.env.*
+secrets.*
+*.secret
+*API_key*
+*api_key*
+*apikey*
+*recovery*code*
+*token*
+AuthKey_*.p8
+# The name-based rules above skip Swift sources (e.g. Tokenizer.swift, Secrets.swift); the pre-commit hook still scans their contents line by line
+!*.swift
+
+# ── Databases (user data; the app creates them at run time) ──
+*.db
+*.db-*
+*.sqlite*
+
+# ── Archives and large files ──
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.ttf
+*.otf
+
+# ── Local test output ──
+TestResults/
+coverage/
+
+# ── Local notes (not published) ──
+docs/

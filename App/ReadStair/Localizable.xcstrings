@@ -1,0 +1,327 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ words" : {
+
+    },
+    "%@ words. Examples: %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ words. Examples: %2$@."
+          }
+        }
+      }
+    },
+    "%lld new words" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld new word"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld new words"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "About %@ Words" : {
+
+    },
+    "Add Book" : {
+
+    },
+    "Add Pages" : {
+
+    },
+    "All Words" : {
+
+    },
+    "Book deleted" : {
+
+    },
+    "Books" : {
+
+    },
+    "Camera Access Is Off" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Can’t Open Your Books" : {
+
+    },
+    "Choose an English book in EPUB format without copy protection, or a plain text file." : {
+
+    },
+    "Choose from Files" : {
+
+    },
+    "Choose from Photos" : {
+
+    },
+    "Choose photos of printed pages that are saved on this iPhone." : {
+
+    },
+    "Continue" : {
+
+    },
+    "Couldn’t Add These Photos" : {
+
+    },
+    "Couldn’t Open This Book" : {
+
+    },
+    "Couldn’t read this page." : {
+
+    },
+    "Delete Book" : {
+
+    },
+    "Delete Page" : {
+
+    },
+    "Find Free Books" : {
+
+    },
+    "Free up some space on this iPhone or update ReadStair, then try again." : {
+
+    },
+    "Free up some space on this iPhone, then try again." : {
+
+    },
+    "Go to Page" : {
+
+    },
+    "How Many to Mark" : {
+
+    },
+    "How Many to Mark…" : {
+
+    },
+    "I Know This" : {
+
+    },
+    "In This Sentence" : {
+
+    },
+    "Let’s Start at %@ Words" : {
+
+    },
+    "Look Up" : {
+
+    },
+    "Mark as New" : {
+
+    },
+    "Marked “%@” as known" : {
+
+    },
+    "Marked “%@” as new" : {
+
+    },
+    "More" : {
+
+    },
+    "New words you tap while reading show up here." : {
+
+    },
+    "No Books Yet" : {
+
+    },
+    "No English text found on this page." : {
+
+    },
+    "No Pages" : {
+
+    },
+    "No Words Yet" : {
+
+    },
+    "No new words" : {
+
+    },
+    "OK" : {
+
+    },
+    "Off" : {
+
+    },
+    "Open Settings" : {
+
+    },
+    "Other" : {
+
+    },
+    "Page %lld of %lld" : {
+
+    },
+    "Page %lld of %lld · No new words" : {
+
+    },
+    "Page deleted" : {
+
+    },
+    "Pick the hardest row where you know every word." : {
+
+    },
+    "Please try again." : {
+
+    },
+    "Pronounce %@" : {
+
+    },
+    "Read" : {
+
+    },
+    "Reading page…" : {
+
+    },
+    "Rename Book" : {
+
+    },
+    "Rename…" : {
+
+    },
+    "Sample book: Alice’s Adventures in Wonderland by Lewis Carroll (1865). Public domain." : {
+
+    },
+    "Save" : {
+
+    },
+    "Scan Pages" : {
+
+    },
+    "Scan pages from a printed English book. ReadStair underlines only the words you may not know." : {
+
+    },
+    "Scan pages to add them to this book." : {
+
+    },
+    "Settings" : {
+
+    },
+    "Skip" : {
+
+    },
+    "Some words you tapped aren’t real words, so this is only a starting point." : {
+
+    },
+    "Something Went Wrong" : {
+
+    },
+    "Start Reading" : {
+
+    },
+    "Tap every word you know. Some aren’t real words — leave those." : {
+
+    },
+    "This is an estimate. You can change it anytime." : {
+
+    },
+    "This page: %lld of %lld words are new" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This page: %1$lld of %2$#@words@ %1$#@verb@ new"
+          },
+          "substitutions" : {
+            "words" : {
+              "argNum" : 2,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg word"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "%arg words"
+                    }
+                  }
+                }
+              }
+            },
+            "verb" : {
+              "argNum" : 1,
+              "formatSpecifier" : "lld",
+              "variations" : {
+                "plural" : {
+                  "one" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "is"
+                    }
+                  },
+                  "other" : {
+                    "stringUnit" : {
+                      "state" : "translated",
+                      "value" : "are"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Title" : {
+
+    },
+    "To scan pages, allow camera access for ReadStair in Settings." : {
+
+    },
+    "Translate To" : {
+
+    },
+    "Translation unavailable" : {
+
+    },
+    "Try Again" : {
+
+    },
+    "Turn on Apple Intelligence in Settings to see what this word means in this sentence." : {
+
+    },
+    "Undo" : {
+
+    },
+    "Which Words Do You Know?" : {
+
+    },
+    "Word List" : {
+
+    },
+    "Word data: wordfreq 3.1.1 (CC BY-SA 4.0), NGSL (CC BY-SA 4.0) and WordNet 3.0 (WordNet License)." : {
+
+    },
+    "Your books and pages stay on this iPhone and in its backups. Your word list and vocabulary level sync through your iCloud account. ReadStair doesn’t collect any data. [Privacy Policy](%@)" : {
+
+    },
+    "iPhone Storage Is Full" : {
+
+    },
+    "new word" : {
+
+    }
+  },
+  "version" : "1.0"
+}

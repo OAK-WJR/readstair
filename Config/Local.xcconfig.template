@@ -1,0 +1,10 @@
+// Copy to Config/Local.xcconfig (git-ignored) and fill in. Only on-device debugging and archiving need it; simulator builds don't.
+// Never put the filled-in values in a tracked file; the pre-commit hook rejects Team IDs.
+
+// DEVELOPMENT_TEAM = <YOUR_TEAM_ID>
+
+// If you're not a ReadStair maintainer, use your own bundle ID prefix:
+// READSTAIR_BUNDLE_ID = com.example.readstair
+
+// iCloud sync of words and the level (see Config/Shared.xcconfig). Needs the team that owns the iCloud.app.readstair container:
+// READSTAIR_ICLOUD = YES

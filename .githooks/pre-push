@@ -1,0 +1,77 @@
+#!/bin/bash
+# Pre-push check. In a contributor's clone it only stops pushes straight to OAK-WJR/readstair (push to your fork instead).
+# The maintainers set git config readstair.role in their own folders:
+#   private  the development repository: push only to its readstair.backupUrl, never an explicit deletion or rewrite (--mirror
+#            is not guarded), and only while GitHub reports it PRIVATE
+#   publish  the release repository: push only main, to the public repository, exactly one new commit, and only the commit
+#            that tools/export-release.sh --approve recorded after it passed the release test, the package check and TestFlight;
+#            besides main, only that commit's new version tag v<x.y.z>, exactly the object --approve makes (annotated, named
+#            after the version in the commit's title, by readstair.identity in Pacific time)
+# Anything this hook cannot prove counts as a refusal. Bash 3.2 safe.
+set -u
+url=${2:-}
+public='https://github.com/OAK-WJR/readstair.git'
+zero=0000000000000000000000000000000000000000
+refuse() { echo "pre-push: Refused: $*. Nothing was pushed." >&2; exit 1; }
+role=$(git config --get readstair.role 2>/dev/null) || role=
+
+case "$role" in
+  private)
+    backup=$(git config --get readstair.backupUrl 2>/dev/null) || refuse "this folder has no backup repository set"
+    [ "$url" = "$backup" ] || refuse "this folder only pushes to its private backup"
+    while read -r local_ref local_sha remote_ref remote_sha; do
+      [ "$local_sha" != "$zero" ] || refuse "deleting $remote_ref in the backup is not allowed"
+      # a tag already there never moves; a branch only moves forward from a commit this folder has
+      case $remote_ref in refs/tags/*) [ "$remote_sha" = "$zero" ] || refuse "moving $remote_ref in the backup is not allowed";; esac
+      [ "$remote_sha" = "$zero" ] || { git cat-file -e "$remote_sha" 2>/dev/null && git merge-base --is-ancestor "$remote_sha" "$local_sha"; } \
+        || refuse "$remote_ref in the backup is not an ancestor of what this pushes: a rewrite, or the backup has commits this folder lacks"
+    done
+    repo=${backup#https://github.com/}
+    repo=${repo%.git}
+    visibility=$(gh repo view "$repo" --json visibility -q .visibility 2>/dev/null) || refuse "could not confirm on GitHub that $repo is private"
+    [ "$visibility" = PRIVATE ] || refuse "$repo is not private on GitHub"
+    ;;
+  publish)
+    # readstair.publicUrl exists only so the maintainers' rehearsals can push to a local stand-in
+    target=$(git config --get readstair.publicUrl 2>/dev/null) || target=$public
+    [ "$url" = "$target" ] || refuse "this folder only pushes to $target"
+    approved=$(git config --get readstair.approvedCommit 2>/dev/null) || refuse "this version has not been approved after its tests"
+    version=$(git log -1 --format=%s "$approved" 2>/dev/null | sed -n 's/^ReadStair \([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\) (build [0-9][0-9]*)$/\1/p')
+    while read -r local_ref local_sha remote_ref remote_sha; do
+      [ "$local_sha" != "$zero" ] || refuse "deleting $remote_ref on GitHub is not allowed"
+      if [ "$local_ref" = refs/heads/main ] && [ "$remote_ref" = refs/heads/main ]; then
+        [ "$local_sha" = "$approved" ] || refuse "this is not the version that was tested and approved"
+        if [ "$remote_sha" = "$zero" ]; then
+          range=$local_sha
+        else
+          git cat-file -e "$remote_sha^{commit}" 2>/dev/null && git merge-base --is-ancestor "$remote_sha" "$local_sha" \
+            || refuse "the public repository has changes this folder lacks. Was it edited on GitHub?"
+          range=$remote_sha..$local_sha
+        fi
+        count=$(git rev-list --count "$range") || refuse "cannot read the history"
+        [ "$count" = 1 ] || refuse "a release adds exactly one commit, this push adds $count"
+      elif [ -n "$version" ] && [ "$local_ref" = "refs/tags/v$version" ] && [ "$remote_ref" = "$local_ref" ]; then
+        [ "$remote_sha" = "$zero" ] || refuse "$remote_ref is already on GitHub, and a tag is never moved"
+        # the object --approve makes, rebuilt byte for byte around the tag's own time, which must be Pacific
+        identity=$(git config --get readstair.identity 2>/dev/null) || refuse "this folder has no readstair.identity"
+        when=$(git cat-file tag "$local_sha" 2>/dev/null | sed -n '4s/^tagger .* \([0-9][0-9]* -0[78]00\)$/\1/p')
+        [ -n "$when" ] && [ "$(printf 'object %s\ntype commit\ntag v%s\ntagger %s %s\n\nReadStair %s\n' "$approved" "$version" \
+          "$identity" "$when" "$version" | git hash-object -t tag --stdin 2>/dev/null)" = "$local_sha" ] \
+          || refuse "$remote_ref is not the annotated tag export-release.sh --approve makes for the approved commit"
+      else
+        refuse "only main and v${version:-<version>} are published ($local_ref)"
+      fi
+    done
+    ;;
+  "")
+    lower=$(printf '%s' "$url" | tr '[:upper:]' '[:lower:]')
+    case "$lower" in
+      *github.com*oak-wjr/readstair|*github.com*oak-wjr/readstair.git|*github.com*oak-wjr/readstair/)
+        refuse "push to your fork of OAK-WJR/readstair, not to the project repository" ;;
+    esac
+    ;;
+  *)
+    refuse "unknown readstair.role '$role'"
+    ;;
+esac
+exit 0

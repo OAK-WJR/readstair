@@ -1,0 +1,258 @@
+# CI: repository checks, core package and UI tests with Xcode 26.6, a build with the iCloud switch, a full-history secret scan,
+# and an Xcode 27 build that fails on deprecated APIs. It runs for pull requests and by hand (Actions › CI › Run workflow), not on
+# the maintainer's pushes, which are tested locally before they are pushed.
+name: CI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash  # bash -eo pipefail: a failing `swift test | tee` fails the step
+
+env:
+  # Hard timeout: `perl -e "$HARD_TIMEOUT" SECONDS COMMAND...` runs COMMAND in its own process group; when time is up it
+  # kills the whole group (swift test and xcodebuild leave helper processes) and exits 124, like coreutils `timeout`,
+  # which macOS lacks. A deadlock of the Swift cooperative pool also stalls Swift Testing's own .timeLimit, so only a kill
+  # from outside ends such a run before the 6-hour job limit. The steps' timeout-minutes are a backstop.
+  HARD_TIMEOUT: |
+    my $secs = shift;
+    my $pid = fork // die "fork: $!\n";
+    if (!$pid) { setpgrp(0, 0); exec { $ARGV[0] } @ARGV or die "exec $ARGV[0]: $!\n" }
+    $SIG{$_} = sub { kill 'TERM', -$pid; exit 130 } for qw(INT TERM);
+    $SIG{ALRM} = sub {
+      print STDERR "::error::Timed out after $secs s: @ARGV\n";
+      kill 'TERM', -$pid; sleep 10; kill 'KILL', -$pid; exit 124;
+    };
+    alarm $secs;
+    waitpid $pid, 0;
+    exit($? & 127 ? 128 + ($? & 127) : $? >> 8);
+
+jobs:
+  test:
+    name: Tests (Xcode 26.6)
+    runs-on: macos-26
+    # The steps' own limits add up to about 3.5 hours; the UI tests take most of it (see their step)
+    timeout-minutes: 210
+    env:
+      XCODE_APP: /Applications/Xcode_26.6.app
+      SIMULATOR: iPhone 17 Pro
+      # The UI tests' appearance (Config in App/ReadStairUITests/Harness.swift; xcodebuild drops the TEST_RUNNER_ prefix): fixed, so a
+      # run does not depend on the runner's setting
+      TEST_RUNNER_READSTAIR_APPEARANCE: light
+      RESULTS: ${{ github.workspace }}/build/results
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Select Xcode 26.6
+        id: xcode
+        run: |
+          if [ ! -d "$XCODE_APP" ]; then
+            echo "::error::$XCODE_APP is not on this runner image. Installed:"
+            ls -d /Applications/Xcode*.app
+            exit 1
+          fi
+          sudo xcode-select --switch "$XCODE_APP"
+          version=$(xcodebuild -version)
+          echo "$version"
+          case $version in
+            "Xcode 26."*) ;;
+            *) echo "::error::Expected Xcode 26.x, got $(echo "$version" | head -n 1)"; exit 1;;
+          esac
+
+      # Each check below runs even when an earlier one failed, so one run reports every failure.
+      - name: Secrets, device IDs, computer paths, email addresses, oversized files, non-English text (all tracked files)
+        if: ${{ !cancelled() && steps.xcode.outcome == 'success' }}
+        run: tools/check-secrets.sh
+
+      - name: Core package tests (swift test on macOS)
+        if: ${{ !cancelled() && steps.xcode.outcome == 'success' }}
+        timeout-minutes: 25
+        working-directory: Packages/ReadStairCore
+        run: |
+          mkdir -p "$RESULTS"
+          perl -e "$HARD_TIMEOUT" 1200 swift test 2>&1 | tee "$RESULTS/core-macos.log"
+
+      - name: Word list is reproducible (make-lexicon.py --check)
+        if: ${{ !cancelled() && steps.xcode.outcome == 'success' }}
+        timeout-minutes: 15
+        run: |
+          python3 -m venv "$RUNNER_TEMP/lexicon-venv"
+          . "$RUNNER_TEMP/lexicon-venv/bin/activate"
+          pip install --disable-pip-version-check --quiet wordfreq==3.1.1
+          python3 tools/make-lexicon.py --check
+
+      - name: Book evaluation script (book-eval.py --self-test)
+        if: ${{ !cancelled() && steps.xcode.outcome == 'success' }}
+        timeout-minutes: 5
+        run: python3 tools/book-eval.py --self-test
+
+      - name: App UI tests (xcodebuild test, iPhone 17 Pro simulator)
+        if: ${{ !cancelled() && steps.xcode.outcome == 'success' }}
+        # Every UI class at the default size plus the accessibility audit at both sizes; the limit leaves room for a slower runner.
+        timeout-minutes: 140
+        run: |
+          mkdir -p "$RESULTS"
+          sdk=$(xcrun --sdk iphonesimulator --show-sdk-version)
+          # The newest available simulator with this name whose iOS has the SDK's major version and is not newer than the SDK.
+          udid=$(xcrun simctl list devices available --json | python3 -c '
+          import json, sys
+          name, sdk = sys.argv[1], tuple(int(p) for p in sys.argv[2].split("."))
+          best = None
+          for runtime, devices in json.load(sys.stdin)["devices"].items():
+              platform, *version = runtime.rsplit(".", 1)[-1].split("-")  # com.apple.CoreSimulator.SimRuntime.iOS-26-5
+              version = tuple(int(p) for p in version if p.isdigit())
+              if platform == "iOS" and version[:1] == sdk[:1] and version <= sdk:
+                  for device in devices:
+                      if device["name"] == name and (best is None or version > best[0]):
+                          best = (version, device["udid"])
+          if best is None:
+              sys.exit("No available %s simulator with iOS %d.x up to %s" % (name, sdk[0], sys.argv[2]))
+          print("Simulator: %s, iOS %s" % (name, ".".join(map(str, best[0]))), file=sys.stderr)
+          print(best[1])
+          ' "$SIMULATOR" "$sdk")
+          xcrun simctl bootstatus "$udid" -b
+          perl -e "$HARD_TIMEOUT" 7800 xcodebuild test \
+            -project App/ReadStair.xcodeproj -scheme ReadStair \
+            -destination "id=$udid" \
+            -derivedDataPath build/DerivedData \
+            -resultBundlePath "$RESULTS/app.xcresult" \
+            CODE_SIGNING_ALLOWED=NO
+
+      # The iCloud sync code is compiled only with the READSTAIR_ICLOUD switch, which the tests leave off: build it too, Debug and
+      # Release, so that it cannot break before a signed build needs it. Unsigned, so no team is needed.
+      - name: Build with the iCloud switch (Debug and Release)
+        if: ${{ !cancelled() && steps.xcode.outcome == 'success' }}
+        timeout-minutes: 30
+        run: |
+          for configuration in Debug Release; do
+            perl -e "$HARD_TIMEOUT" 1200 xcodebuild build \
+              -project App/ReadStair.xcodeproj -scheme ReadStair -sdk iphonesimulator -configuration "$configuration" \
+              -derivedDataPath build/DerivedData \
+              READSTAIR_ICLOUD=YES CODE_SIGNING_ALLOWED=NO
+          done
+
+      - name: Test report
+        if: ${{ always() }}
+        run: |
+          mkdir -p "$RESULTS"
+          set --
+          for f in "$RESULTS/core-macos.log" "$RESULTS/app.xcresult"; do
+            if [ -e "$f" ]; then set -- "$@" "$f"; fi
+          done
+          if [ $# -eq 0 ]; then
+            echo "No test results: the tests did not run." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          tools/report-tests.sh "$@" > "$RESULTS/test-report.md"
+          cat "$RESULTS/test-report.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload test results (.xcresult, logs, report)
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-attempt-${{ github.run_attempt }}
+          path: ${{ env.RESULTS }}
+          if-no-files-found: warn
+          retention-days: 90
+
+  gitleaks:
+    name: Secret scan (gitleaks, full history)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GITLEAKS_VERSION: 8.28.0
+    # The gitleaks release binary, not gitleaks-action: on push and pull_request events the action scans only the new
+    # commits (it sets its own --log-opts), and it needs a paid license for repositories owned by an organization.
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # every commit of every branch and tag
+
+      - name: Install gitleaks
+        working-directory: ${{ runner.temp }}
+        run: |
+          release=https://github.com/gitleaks/gitleaks/releases/download/v$GITLEAKS_VERSION
+          tarball=gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz
+          curl -fsSL --retry 3 -o "$tarball" "$release/$tarball"
+          curl -fsSL --retry 3 -o checksums.txt "$release/gitleaks_${GITLEAKS_VERSION}_checksums.txt"
+          grep " $tarball\$" checksums.txt | sha256sum --check --strict
+          tar -xzf "$tarball" gitleaks
+
+      - name: Scan the full history
+        run: '"$RUNNER_TEMP/gitleaks" git --log-opts=--all --redact --verbose --no-banner .'
+
+      - name: No blob over 5 MB anywhere in the history
+        if: ${{ !cancelled() }}
+        run: |
+          git rev-list --objects --all \
+            | git cat-file --batch-check='%(objecttype) %(objectsize) %(rest)' \
+            | awk '$1 == "blob" && $2 > 5242880 { print "::error::Blob over 5 MB in the history: " $3 " (" $2 " bytes)"; big = 1 }
+                   END { exit big }'
+
+  xcode-27-compat:
+    name: Xcode 27 compatibility
+    # The GitHub-hosted image that has Xcode 27. When GitHub moves Xcode 27 to another image (a macos-27 image, say), change
+    # this label. Use only labels GitHub lists: a job asking for an unknown label waits for a runner instead of failing.
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      XCODE_MAJOR: '27'
+      # Deprecation warnings become errors in ReadStair's own Swift code, and nothing else does. `-Werror DeprecatedDeclaration`
+      # (a Swift diagnostic group, SE-0443, Swift 6.1+) upgrades only the "'x' was deprecated in iOS 27.0" family, where our
+      # code uses such an API. SWIFT_TREAT_WARNINGS_AS_ERRORS=YES would also fail on every other warning a new compiler adds,
+      # and on warnings Xcode reports from SDK headers and build tools. `-Werror UnknownWarningGroup` turns a misspelled or
+      # renamed group into an error instead of a check that silently does nothing. With no third-party packages, the flags
+      # reach only our targets (app, UI tests, ReadStairCore and its tests).
+      DEPRECATIONS_AS_ERRORS: -Werror DeprecatedDeclaration -Werror UnknownWarningGroup
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Select Xcode 27
+        id: xcode
+        run: |
+          # The newest non-beta Xcode 27 on the image. Without one the image does not provide Xcode 27 (yet, or any longer):
+          # the job warns and passes. With one, every build error fails the job.
+          app=$(ls -d /Applications/Xcode_"$XCODE_MAJOR"*.app 2>/dev/null | grep -iv beta | sort -V | tail -n 1 || true)
+          if [ -z "$app" ]; then
+            echo "::warning::The ${ImageOS:-runner} image has no Xcode $XCODE_MAJOR, so its compatibility was not checked."
+            echo "Xcode $XCODE_MAJOR compatibility: **not checked**, the runner image has no Xcode $XCODE_MAJOR." >> "$GITHUB_STEP_SUMMARY"
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          sudo xcode-select --switch "$app"
+          version=$(xcodebuild -version)
+          echo "$version"
+          case $version in
+            "Xcode $XCODE_MAJOR."*) echo "available=true" >> "$GITHUB_OUTPUT";;
+            *) echo "::error::$app reports $(echo "$version" | head -n 1)"; exit 1;;
+          esac
+
+      - name: Build the core package and its tests (iOS Simulator)
+        if: steps.xcode.outputs.available == 'true'
+        working-directory: Packages/ReadStairCore
+        run: |
+          xcodebuild build-for-testing -scheme ReadStairCore -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO OTHER_SWIFT_FLAGS="\$(inherited) $DEPRECATIONS_AS_ERRORS"
+
+      - name: Core package unit tests with Xcode 27 (swift test on macOS)
+        if: ${{ !cancelled() && steps.xcode.outputs.available == 'true' }}
+        timeout-minutes: 25
+        working-directory: Packages/ReadStairCore
+        run: perl -e "$HARD_TIMEOUT" 1200 swift test
+
+      # With the iCloud switch on, which compiles all of the app's code: the switch off only leaves the sync code out
+      - name: Build the app and its UI tests (iOS Simulator)
+        if: ${{ !cancelled() && steps.xcode.outputs.available == 'true' }}
+        run: |
+          xcodebuild build-for-testing -project App/ReadStair.xcodeproj -scheme ReadStair \
+            -destination 'generic/platform=iOS Simulator' \
+            READSTAIR_ICLOUD=YES CODE_SIGNING_ALLOWED=NO OTHER_SWIFT_FLAGS="\$(inherited) $DEPRECATIONS_AS_ERRORS"

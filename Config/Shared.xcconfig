@@ -1,0 +1,55 @@
+// Build settings shared by every ReadStair target (project-level base configuration).
+// Signing settings (Team ID etc.) live only in the git-ignored Config/Local.xcconfig; see Local.xcconfig.template.
+
+SDKROOT = iphoneos
+IPHONEOS_DEPLOYMENT_TARGET = 26.0
+TARGETED_DEVICE_FAMILY = 1
+
+// Swift 6 language mode; the app target defaults to MainActor isolation + Approachable Concurrency
+SWIFT_VERSION = 6.0
+SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor
+SWIFT_APPROACHABLE_CONCURRENCY = YES
+SWIFT_EMIT_LOC_STRINGS = YES
+LOCALIZATION_PREFERS_STRING_CATALOGS = YES
+ENABLE_USER_SCRIPT_SANDBOXING = YES
+CODE_SIGN_STYLE = Automatic
+ALWAYS_SEARCH_USER_PATHS = NO
+
+READSTAIR_BUNDLE_ID = app.readstair
+MARKETING_VERSION = 1.0.0
+CURRENT_PROJECT_VERSION = 4
+
+GENERATE_INFOPLIST_FILE = YES
+INFOPLIST_KEY_CFBundleDisplayName = ReadStair
+INFOPLIST_KEY_LSApplicationCategoryType = public.app-category.education
+INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO
+INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES
+INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES
+INFOPLIST_KEY_UILaunchScreen_Generation = YES
+// Portrait only: in landscape an iPhone sheet ignores its detents, so the word card would cover the page it explains
+INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait
+INFOPLIST_KEY_NSCameraUsageDescription = ReadStair uses the camera to scan the pages of your books.
+
+// Debug / Release differences
+SWIFT_ACTIVE_COMPILATION_CONDITIONS[config=Debug] = DEBUG $(inherited)
+SWIFT_OPTIMIZATION_LEVEL[config=Debug] = -Onone
+SWIFT_OPTIMIZATION_LEVEL[config=Release] = -O
+SWIFT_COMPILATION_MODE[config=Release] = wholemodule
+ONLY_ACTIVE_ARCH[config=Debug] = YES
+ENABLE_TESTABILITY[config=Debug] = YES
+DEBUG_INFORMATION_FORMAT[config=Debug] = dwarf
+DEBUG_INFORMATION_FORMAT[config=Release] = dwarf-with-dsym
+VALIDATE_PRODUCT[config=Release] = YES
+
+// iCloud sync switch: READSTAIR_ICLOUD = YES (in Local.xcconfig, or on the xcodebuild command line) builds the app with the iCloud
+// entitlements, the remote-notification background mode and the call that starts sync: all three, or none of them. A signed build
+// with it needs a paid team that owns the iCloud container; tests, unsigned and free-team builds leave it unset (CI only compiles
+// it). Only the values live here: the app target selects them, because this file also configures the UI test target. Don't use
+// Xcode's Signing & Capabilities editor on the app: it writes a fixed CODE_SIGN_ENTITLEMENTS over the switch. Edit
+// App/ReadStair/ReadStair.entitlements instead.
+READSTAIR_ICLOUD_ENTITLEMENTS_YES = ReadStair/ReadStair.entitlements
+READSTAIR_ICLOUD_INFOPLIST_YES = ReadStair/Info-iCloud.plist
+READSTAIR_ICLOUD_FLAG_YES = READSTAIR_ICLOUD
+
+// Local signing overrides (optional file, skipped when absent)
+#include? "Local.xcconfig"

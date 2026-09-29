@@ -1,0 +1,10 @@
+NGSL_12_stats.csv and NGSL_12_lemmatized_for_research.csv are the New General Service List 1.2 by Browne, C.,
+Culligan, B., and Phillips, J., copied unchanged from https://www.newgeneralservicelist.com/new-general-service-list.
+The site states: "New General Service List by Browne, C., Culligan, B., and Phillips, J. is licensed under a Creative
+Commons Attribution-ShareAlike 4.0 International License."
+
+License text: https://creativecommons.org/licenses/by-sa/4.0/legalcode
+Source: see ATTRIBUTION.md in this directory.
+
+This license applies only to the data files in this directory. ReadStair's source code is licensed under the PolyForm
+Noncommercial License 1.0.0 (see LICENSE at the repository root).
